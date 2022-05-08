@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Python.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -25,7 +26,10 @@ int main(int argc, char* argv[] ){
     Mat input = imread(argv[1]); //Inputs target image
     Mat input_gray;
     Mat input_resized;
-    auto model = readNetFromTensorflow("model/saved_model.pb");//imports model
+    
+    Model model("mymodel.pb");
+    model.restore("./my_test_model");
+    //auto model = readNetFromTensorflow("model/saved_model.pb");//imports model
 
     cvtColor(input, input_gray, COLOR_BGR2GRAY); //converts image to greyscale 
     resize(input_gray, input_resized, Size(180,180),INTER_LINEAR); //Resizes image to match training data
