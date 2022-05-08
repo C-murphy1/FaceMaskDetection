@@ -19,7 +19,7 @@ using namespace dnn;
 
 int main(int argc, char* argv[] ){
     vector<string> class_names;
-    class_names.push_back("Mask");
+    class_names.push_back("Wearing a Mask");
     class_names.push_back("No Mask");
 
     Mat input = imread(argv[1]); //Inputs target image
@@ -31,7 +31,7 @@ int main(int argc, char* argv[] ){
 
 
     cvtColor(input, input_gray, COLOR_BGR2GRAY); //converts image to greyscale 
-    resize(input_gray, input_resized, Size(180,180),INTER_LINEAR); //Resizes image to match training data
+    resize(input_gray, input_resized, Size(280,280),INTER_LINEAR); //Resizes image to match training data
 
     model.setInput(input_resized); //Sets the formatted input image as the model input
     Mat outputs = model.forward(); //Gives the imgage to the model to get a result
@@ -42,5 +42,5 @@ int main(int argc, char* argv[] ){
     minMaxLoc(outputs.reshape(1, 1), 0, &prob, 0, &classType);
     int label = classType.x;
 
-    cout << class_names[label] << " with probability " << prob << "% " << "\n";
+    cout << class_names[label] << " with probability " << prob << "\n";
 }
