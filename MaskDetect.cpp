@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Python.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,31 +19,28 @@ using namespace dnn;
 
 int main(int argc, char* argv[] ){
     vector<string> class_names;
+    class_names.push_back("Mask");
     class_names.push_back("No Mask");
-    class_names.push_back("Wearing a Mask");
 
     Mat input = imread(argv[1]); //Inputs target image
     Mat input_gray;
     Mat input_resized;
-    
-    Model model("mymodel.pb");
-    model.restore("./my_test_model");
-    //auto model = readNetFromTensorflow("model/saved_model.pb");//imports model
+
+
+    auto model = readNetFromONNX("model/model.onnx");//imports model
+
 
     cvtColor(input, input_gray, COLOR_BGR2GRAY); //converts image to greyscale 
     resize(input_gray, input_resized, Size(180,180),INTER_LINEAR); //Resizes image to match training data
 
-    model.setInput(input_resized);
-    Mat outputs = model.forward();
+    model.setInput(input_resized); //Sets the formatted input image as the model input
+    Mat outputs = model.forward(); //Gives the imgage to the model to get a result
 
-    Point classIdPoint;
-    double final_prob;
+    Point classType;
+    double prob;
 
-    minMaxLoc(outputs.reshape(1, 1), 0, &final_prob, 0, &classIdPoint);
-    int label_id = classIdPoint.x;
+    minMaxLoc(outputs.reshape(1, 1), 0, &prob, 0, &classType);
+    int label = classType.x;
 
-    // Print predicted class.
-    string out_text = format("%s, %.3f", (class_names[label_id].c_str()), final_prob);
-    cout << out_text;
-
+    cout << class_names[label] << " with probability " << prob << "% " << "\n";
 }
