@@ -27,7 +27,7 @@ int main(int argc, char* argv[] ){
     Mat input_resized;
 
 
-    auto model = readNetFromONNX("model/model.onnx");//imports model
+    auto model = readNetFromONNX("model.onnx");//imports model
 
 
     cvtColor(input, input_gray, COLOR_BGR2GRAY); //converts image to greyscale 
